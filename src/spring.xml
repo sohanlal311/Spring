@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd"
+       default-init-method="init"
+       default-destroy-method="cleanUp">
+       
+    <context:annotation-config/>
+    <context:component-scan base-package="com.sohan.spring" />
+       
+	<bean id="parenttriangle1" class="com.sohan.spring.Triangle" abstract="true">
+		<property name="pointA" ref="pointA" />
+	</bean>
+	
+	<bean id="triangle1" class="com.sohan.spring.Triangle" parent="parenttriangle1">
+		<property name="pointB" ref="pointB" />
+		<property name="pointC" ref="pointC" />
+	</bean>
+	
+	<!-- <bean id="circle" class="com.sohan.spring.Circle">
+		<property name="center" ref="pointA" />
+	</bean> -->
+	
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource" >
+		<property name="basenames">
+			<list>
+				<value>messages</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- ordered list of post processors -->
+	<bean class="com.sohan.spring.DisplayObjectBeanPostProcessor" />
+	<bean class="com.sohan.spring.DisplayNameBeanPostProcessor" />
+	<bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
+	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+	
+	<!-- factory bean post processors -->
+	<bean class="com.sohan.spring.MyBeanFactoryPostProcessor" />
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="pointsConfig.properties" />
+	</bean>
+	
+	<!-- bean id="parenttriangle2" class="com.sohan.spring.Triangle" abstract="true">
+		<property name="points">
+			<list>
+				<ref bean="pointA"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="triangle2" class="com.sohan.spring.Triangle" parent="parenttriangle2">
+		<property name="points">
+			<list merge="true">
+				<ref bean="pointB"/>
+			</list>
+		</property>
+	</bean -->
+
+	<bean id="triangle" class="com.sohan.spring.Triangle" name="triangle-name" autowire="byName" scope="prototype">
+		<!-- property name="type" value="Equilateral" / -->
+		<!-- constructor-arg type="int" value="20" / -->
+		<!-- property name="pointA">
+			<ref bean="zeroPoint" />
+		</property -->
+		<!-- property name="pointB" ref="point2" /-->
+		<!-- property name="pointC" ref="point3" /-->
+		<!-- property name="pointB">
+			<bean class="com.sohan.spring.Point">
+				<property name="x" value="-20" />
+				<property name="y" value="0" />
+			</bean>
+		</property>
+		<property name="pointC">
+			<bean class="com.sohan.spring.Point">
+				<property name="x" value="0" />
+				<property name="y" value="20" />
+			</bean>
+		</property -->
+		<!-- property name="points">
+			<list>
+				<ref bean="zeroPoint" />
+				<ref bean="point2" />
+				<ref bean="point3" />
+			</list>
+		</property -->
+	</bean>
+	
+	<bean id="pointA" class="com.sohan.spring.Point">
+		<qualifier value="circleRelated" />
+		<property name="x" value="${pointA.pointX}" />
+		<property name="y" value="${pointA.pointY}" />
+	</bean>
+	
+	<alias name="triangle" alias="triangle-alias" />
+	
+	<bean id="pointB" class="com.sohan.spring.Point">
+		<property name="x" value="${pointB.pointX}" />
+		<property name="y" value="${pointB.pointY}" />
+	</bean>
+	
+	<bean id="pointC" class="com.sohan.spring.Point">
+		<property name="x" value="${pointC.pointX}" />
+		<property name="y" value="${pointC.pointY}" />
+	</bean>
+	
+	<bean id="center" class="com.sohan.spring.Point">
+		<property name="x" value="${pointC.pointX}" />
+		<property name="y" value="${pointC.pointY}" />
+	</bean>
+</beans>
